@@ -1,0 +1,209 @@
+# Task: Keyphrase Generation
+- I tried to summarize each paper within **7 lines** in my language.
+- Feel free to email me if you have any questions or find errors, typos below :-)
+- Email: hsko0926@gmail.com
+- Last updated on Dec, 2020
+
+## Summary
+- Flow & Trend
+  - Seq2Seq (GRU -> Transformer) + Attention variations (e.g., coverage, diversity)
+  - Seq2Seq (GRU -> Transformer) + other resources (e.g., title, other documents)
+  - Document modeling: `Sequential` vs. `Graphical`
+- Baseline
+   - TF-IDF
+   - TextRank
+   - CopyRNN (Meng et al., ACL17')
+   - CorrRNN (Chen et al., EMNLP18')
+   - TG-Net (Chen et al., AAAI19')
+   - Transformer (Vaswani et al., NIPS19')
+   - CatSeq (Yuan et al., ACL20')
+- Frequently-used dataset
+  - Required: Inspec (Hulth, EMNLP03'), Krapivin (Krapivin et al., 09'), NUS(Nguyen and Kan, ICADL07'), SemEval (Kim et al., ACL10'), KP20K (Meng et al., ACL17')
+  - Optional: KPTimes (Gallina et al., INLG19), StackEx (Yuan et al., ACL20') 
+
+
+## Papers
+
+### 2017
+- [Deep Keyphrase Generation](https://arxiv.org/pdf/1704.06879.pdf)
+  - Attack: Let's generate keyphrases which are **absent** in documents -> First proposed **Keyphrase Generation task**
+  - Model: CopyRNN = GRU + copy mechanism
+  - Baseline: TF-IDF, TextRank, SingleRank, ExpandRank, Maui, KEA, RNN
+  - Dataset: Inspec, Krapivin, NUS, SemEval-2010, KP20K
+  - Eval: F1@5, F1@10, R@10, R@50
+  - Code: https://github.com/memray/OpenNMT-kpg-release
+  - `ACL2017` `RuiMeng` `U.Pittsburg`
+
+### 2018
+- [Keyphrase Generation with Correlation Constraints](https://www.aclweb.org/anthology/D18-1439.pdf)
+  - Attack: Existing papers ignore the **correlation between keyphrases** (**duplication & coverage**).
+  - Model: CorrRNN = GRU + coverage attention + review mechanism
+  - Baseline: TF-IDF, TextRank, SingleRank, ExpandRank, TopicRank, Maui, KEA, RNN, CopyRNN
+  - Dataset: Krapivin, NUS, SemEval-2010
+  - Eval: F1@5, F1@10, NDCG@5, NDCG@10, R@10
+  - Code: Not Available
+  - `EMNLP2018` `JunChen` `Tencent` `U.Beihang`
+- [Semi-Supervised Learning for Neural Keyphrase Generation](https://www.aclweb.org/anthology/D18-1447.pdf)
+  - Attack: Can we leverage not only **labeled data** but also **large-scale unlabeled data**?
+  - Model: Syn.Unsuper, Syn.Self, Multi-task
+  - Baseline: TF-IDF, TextRank, SingleRank, ExpandRank, Maui, KEA, CopyRNN
+  - Dataset: Inspec, Krapivin, NUS, SemEval, KP20K
+  - Eval: F1@5, F1@10, R@10 
+  - Code: Not available
+  - `EMNLP2018` `Ye and Wang` `Northeastern.U`
+- [Unsupervised Keyphrase Extraction with Multipartite Graphs](https://www.aclweb.org/anthology/N18-2105.pdf)
+  - Attack: Can we leverage **topic** extracted in an unsupervised manner into Keyphrase extraction?
+  - Model: MultipartiteRank (mp-rank)
+  - Baseline: TopicRank, PageRank, PositionRank
+  - Dataset: Inspec, SemEval, Marujo-2012
+  - Eval: F1@5, F1@10, MAP
+  - Code: https://github.com/boudinfl/pke
+  - `NAACL2018` `FlorianBoudin` `U.Nantes`
+
+### 2019
+- [DivGraphPointer: A Graph Pointer Network for Extracting Diverse Keyphrases](https://dl.acm.org/doi/pdf/10.1145/3331184.3331219)
+  - Attack: Existing papers did document modeling as Sequential --> How about **Graph**?
+  - Model: DivGraphPointer
+  - Baseline: TF-IDF, TextRank, SingleRank, ExpandRank, RNN, CopyRNN, CNN, CopyCNN
+  - Dataset: KP20K, Inspec, NUS, SemEval, Krapivin
+  - Eval: F1@5, F1@10, NDCG@10, AIC@5, AIC@10
+  - Code: Not available
+  - `SIGIR2019` `ZhiqingSun` `JianTang` `Peking.U` `U.Montreal`
+- [Inferring Search Queries from Web Documents via a Graph-Augmented Sequence to Attention Network](https://dl.acm.org/doi/pdf/10.1145/3308558.3313746)
+  - Attack: Proposed **search query generation** task. (All the previous work focused on keyword)
+  - Model: G-S2A
+  - Baseline: TextRank, Seq2Seq-Attn, Seq2SeqAttn-Copy, HRED, Transformer
+  - Dataset: In-house (Tencent)
+  - Eval: ROUGE-1,2,L, BLEU-1,2,3,4, EM
+  - Code: https://github.com/xuefei1/Graph-Seq2Attn
+  - `WWW2019` `FredHan` `U.Alberta` `Tencent`
+- [An Integrated Approach for Keyphrase Generation via Exploring the Power of Retrieval and Extraction](https://arxiv.org/pdf/1904.03454.pdf)
+  - Attack: Previous work were either extractive or generative --> Proposed **multi-task for KE & KG**
+  - Model: KG-KE-KR-M
+  - Baseline: TF-IDF, TextRank, Maui, CopyRNN, CorrRNN
+  - Dataset: Inspec, Krapivin, NUS, SemEval, KP20K
+  - Eval: F1@5, F1@10, MAP@10, R@10
+  - Code: https://github.com/Chen-Wang-CUHK/KG-KE-KR-M
+  - `NAACL2019` `WangChen` `Chinese University of HongKong` `Tencent` `Alibaba`
+- [Title-Guided Encoding for Keyphrase Generation](https://arxiv.org/pdf/1808.08575.pdf)
+  - Attack: Previous work treated title and main body as equal. --> How about using **title?**
+  - Model: TG-Net = GRU + Attention(title2title, body2title)
+  - Baseline: TF-IDF, TextRank, Maui, CopyRNN, CopyCNN
+  - Dataset: Inspec, Krapivin, NUS, SemEval-2010, KP20K
+  - Eval: F1@5, F1@10, R@10, R@50
+  - Code: Not Available
+  - `AAAI2019` `WangChen` `Chinese University of HongKong`
+- [Neural Keyphrase Generation via Reinforcement Learning with Adaptive Rewards](https://arxiv.org/pdf/1906.04106.pdf)
+  - Attack: Previous work generated too few keyphrases --> How about using **RL**?
+  - Model: CatSeq-2RF
+  - Baseline: CatSeq, CatSeqD, CatSeqCorr, CatSeqTG
+  - Dataset: Inspec, Krapivin, NUS, SemEval, KP20K
+  - Eval: F1@M, F1@5, MAE
+  - Code: https://github.com/kenchan0226/keyphrase-generation-rl
+  - `ACL2019` `HouPongChan` `WangChen` `Chinese University of HongKong`
+- [Open Domain Web Keyphrase Extraction Beyond Language Modeling](https://www.aclweb.org/anthology/D19-1521.pdf)
+  - Attack: Real web documents are unstructured -> Can we leverage domain and visual info? (feat.OpenKP dataset 공개)
+  - Model: BLING-KPE
+  - Baseline: TF-IDF, TextRank, LeToR, PROD (w/ LambdaMart), CopyRNN
+  - Dataset: OpenKP, QueryPrediction (from BingSearchLog), DUC-2001
+  - Eval: P, R@1,3,5
+  - Code: https://github.com/microsoft/OpenKP
+  - `IJCNLP2019` `LeeXiong` `MicrosoftResearch`
+- [BSDAR: BEAM SEARCH DECODING WITH ATTENTION REWARD IN NEURAL KEYPHRASE GENERATION](https://arxiv.org/pdf/1909.09485.pdf)
+  - `arxiv19.10` `RuiMeng` `MicrosoftResearch` `U.Pittsburgh`
+- [Does Order Matter? An Empirical Study on Generating Multiple Keyphrases as a Sequence](https://arxiv.org/pdf/1909.03590.pdf)
+  - `arxiv19.10` `RuiMeng` `MicrosoftResearch` `U.Pittsburgh`
+- [Keyphrase Generation: A Multi-Aspect Survey](https://arxiv.org/pdf/1910.05059.pdf)
+  - `arxiv19.10` `ErionCano` `Charles.U` `Survey`
+
+### 2020
+- [Keyphrase Extraction with Span-based Feature Representations](https://arxiv.org/pdf/2002.05407.pdf)
+  - `arxiv20.02` `FunanMu` `Tencent` `HarbinInstitute`
+- [SIFRank: A New Baseline for Unsupervised Keyphrase Extraction Based on Pre-Trained Language Model](https://ieeexplore.ieee.org/document/8954611)
+  - Attack: Using Pretrained Language model, let's include external knowledge information into the model!
+  - Model: SIFRank
+  - Baseline: TF-IDF, YAKE, TextRank, SingleRank, TopicRank, PositionRank, Multipartite, EmbedRank, RVA
+  - Dataset: Inspec, SemEval-2017, DUC
+  - Eval: P@5, R@5, F1@5
+  - Code: https://github.com/sunyilgdx/SIFRank
+  - `Access` `YiSun` `U.PLA`
+- [One Size Does Not Fit All: Generating and Evaluating Variable Number of Keyphrases](https://www.aclweb.org/anthology/2020.acl-main.710.pdf)
+  - Attack: Previous work generated fixed number of keyphrases. --> The number of important keyphrases for each document is different.
+  - Model: CatSeq = Seq2Seq + Semantic Coverage + Orthogonal Regularization
+  - Baseline: TF-IDF, TextRank, KEA, Maui, CopyRNN, CorrRNN, ParaNet+coAttn, KG-KE-KR-M, DivGraphPointer, Semi-Multi, TG-Net 
+  - Dataset: KP20K, Inspec, Krapivin, NUS, SemEval, StackEx
+  - Eval: F1@5, F1@10, F1@**O**, F1@**M**, t-SNE
+  - Code: https://github.com/memray/OpenNMT-kpg-release
+  - `ACL2020` `XingdiYuan` `RuiMeng` `U.Pittsburg` `MicrosoftResearch`
+- [Exclusive Hierarchical Decoding for Deep Keyphrase Generation](https://www.aclweb.org/anthology/2020.acl-main.103.pdf)
+  - Attack: Previous work (sequential decoding) ignored the hierarchical composionality --> How about **hierarchical decoding**?
+  - Model: ExHiRD-s, ExHiRD-h (s, h refer to soft and hard, respectively.)
+  - Baseline: Transformer, CatSeq, CatSeqD, CatSeqCorr, 
+  - Dataset: KP20K, Inspec, Krapivin, SemEval
+  - Eval: F1@5, F1@M, DupRatio
+  - Code: https://github.com/Chen-Wang-CUHK/ExHiRD-DKG
+  - `ACL2020` `WangChen` `Chinese University of HongKong` `TencentAI`
+- [Keyphrase Generation for Scientific Document Retrieval](https://www.aclweb.org/anthology/2020.acl-main.105.pdf) "Ranking experiment"
+  - Attack: There were no research on whether Keyphrase generation really helps Document retrieval
+  - Model: X
+  - Baseline: BM25+RM3, QL+RM3, BM25, QL, CopyRNN, CorrRNN, mp-rank
+  - Dataset: KP20K, NTCIR-2, KPTimes
+  - Eval: MAP, P@10, F1@5
+  - Code: https://github.com/boudinfl/ir-using-kg
+  - `ACL2020` `FlorianBoudin` `U.Nantes`
+- [Keyphrase Generation with Cross-Document Attention](https://arxiv.org/pdf/2004.09800.pdf)
+  - Attack: For absent words, wouldn't it be possible to get a hint by referring to other similar documents?
+  - Model: CDKGEN = Transformer + Cross-Document Attention + Copy Mechanism
+  - Baseline: CopyRNN, CorrRNN, KG-KE-KR-M, Multi-task, TG-Net, CatSeq, Transformer
+  - Dataset: Inspec, NUS, Krapivin, SemEval, KP20K
+  - Eval: F1@5, F1@10, F1@M, F1@O, R@10, R@50, MAE, tSNE
+  - Code: https://github.com/svaigba/cdkgen
+  - `arxiv20.04` `ShizheDiao` `HKUST` `Sinovation`
+- [Keyphrase Prediction With Pre-trained Language Model](https://arxiv.org/pdf/2004.10462.pdf)
+  - Attack: Present Keyword Extraction + Absent Keyword Generation
+  - Model: BERT-PKE, BERT-AKG = Transformer + Fusion Attention
+  - Baseline: TF-IDF, TextRank, CopyRNN, TG-NET, KG-KE-KR, CatSeq, ParaNet+CoAttn, KG-GAN, BiLSTM-CRF, Transformer
+  - Dataset: KP20K, Krapivin, NUS
+  - Eval: F1@5, F1@10, F1@M, R@50
+  - Code: Not available
+  - `arxiv20.04` `RuiLiu` `ChineseAcademyOfSciences`
+- [Joint Keyphrase Chunking and Salience Ranking with BERT](https://arxiv.org/pdf/2004.13639.pdf)
+  - Attack: How about **multi-task** for both KE and Ranking?  
+  - Model: BERT-jointKPE  (Descendant of "BLING-KPE")
+  - Baseline: CopyRNN, DivGraphPointer, BLING-KPE, LLbeBack
+  - Dataset: OpenKP, KP20K
+  - Eval: F1, P, R@1,3,5
+  - Code: https://github.com/thunlp/BERT-KPE
+  - `arxiv20.04` `SiSun` `MicrosoftResearch` `Tsinghua.U`
+- [Select, Extract and Generate: Neural Keyphrase Generation with Syntactic Guidance](https://arxiv.org/pdf/2008.01739.pdf)
+  - Attack: (1) DO NOT truncate documents as you like, (2) keyphrases usually consist of noun & adj --> Train with **POS tagging**
+  - Model: SEG-Net = sentence-selector + Transformer + layer-wise coverage attention + informed copy attention
+  - Baseline: CatSeq, CopyCorr (Transformer ver.), TG-Net (Transformer ver.), Transformer
+  - Dataset: KP20K, Inspec, Karapivin, NUS, SemEval, KPTimes, In-house
+  - Eval: F1@5, F1@M, MAE
+  - Code: Not available
+  - `arxiv20.08` `WasiUddinAhmad` `UCLA` `YahooResearch`
+- [An Empirical Study on Neural Keyphrase Generation](https://arxiv.org/pdf/2009.10229.pdf)
+  - Attack: Experimental analysis on **which factor (order, decoding strategies, model, data)** contributes on KG performance
+  - Model: X
+  - Baseline: One2One, One2Seq
+  - Dataset: KP20K, MAGKP, Inspec, Krapivin, NUS, SemEval, DUC
+  - Eval: F1@10, P@10, R@10, R@50
+  - Code: https://github.com/memray/OpenNMT-kpg-release
+  - `arxiv20.09` `RuiMeng` `U.Pittsburg`, `MicrosoftResearch`
+- [Diverse Keyphrase Generation with Neural Unlikelihood Training](https://arxiv.org/pdf/2010.07665.pdf)
+  - Attack: Previous work ignored the importance of **diversity**
+  - Model: DivKGen = Seq2Seq + Neural Unlikelihood (UL)
+  - Baseline: CatSeq, CatSeqCorr, CatSeqTG, CatSeqTG-2RF1
+  - Dataset: KP20K, KPTimes, StackEx
+  - Eval: F1@M, Self-BLEU, EditDist, EmbSim
+  - Code: https://github.com/BorealisAI/keyphrase-generation
+  - `Coling2020` `HareeshBahuleyan` `BorealisAI`
+- [Keyphrase Extraction with Dynamic Graph Convolutional Networks and Diversified Inference](https://arxiv.org/pdf/2010.12828.pdf)
+  - Attack: Previous work (S2S) were not good at document/compositionality of keywords modeling --> **Graph**!
+  - Model: Div-DGCN
+  - Baseline: Transformer, CatSeq, CatSeqTG, CatSeqTG-2RF, DivGraphPointer, ExHiRD
+  - Dataset: KP20K, Inspec, NUS, SemEval, Krapivin
+  - Eval: F1@M, F1@5, F1@10, nDCG@10
+  - Code: Not Available
+  - `arxiv20.10` `HaoyuZhang` `Alibaba` `NUDT`
